@@ -1,0 +1,5 @@
+# This file contains all the results so far
+
+1) Touqir: 
+	Trained with 2 hidden layered MLP network each with 800 hidden units and with 50% dropout on each of those hidden layers on the MNIST dataset.
+	Ended up with a final test accuracy of 98.82%.
