@@ -13,7 +13,7 @@
 
 4) Touqir:
 	Trained with 2 hidden layered MLP network each with 800 hidden units and with 65% dropout on each of those hidden layers on the MNIST dataset.
-	User 20% dropout in the input layer. Ended up with a final test accuracy of 98.45%. (Case of overfitting probably)
+	User 20% dropout in the input layer. Ended up with a final test accuracy of 98.45%. (50% dropout seems to give better accuracy than 65%)
 
 5) Touqir:
 	Trained with CNN. Test Accuracy is 99.54%. (Later I will add details about the architecture) 
