@@ -2,6 +2,7 @@
 
 1) Touqir: 
 	Trained with 2 hidden layered MLP network each with 800 hidden units and with 50% dropout on each of those hidden layers on the MNIST dataset.
+	Activation function is rectified linear unit for all the layers except that output layer had softmax.
 	Ended up with a final test accuracy of 98.82%.
 2) Zhaorui:
 	Trained with 4 hidden layers (2 conv & 2 pooling)
@@ -9,11 +10,12 @@
 
 3) Touqir:
 	Trained with 3 hidden layered MLP network each with 800 hidden units and with 50% dropout on each of those hidden layers on the MNIST dataset.
-	User 20% dropout in the input layer. Ended up with a final test accuracy of 98.72%. (Case of overfitting probably)
+	User 20% dropout in the input layer. Activation function is rectified linear unit for all the layers except that the last layer had softmax.Ended up with a final test accuracy of 98.72%. (Case of overfitting probably)
 
 4) Touqir:
 	Trained with 2 hidden layered MLP network each with 800 hidden units and with 65% dropout on each of those hidden layers on the MNIST dataset.
-	User 20% dropout in the input layer. Ended up with a final test accuracy of 98.45%. (50% dropout seems to give better accuracy than 65%)
+	User 20% dropout in the input layer. Activation function is rectified linear unit for all the layers except that the output layer had softmax. Ended up with a final test accuracy of 98.45%. (50% dropout seems to give better accuracy than 65%)
 
 5) Touqir:
-	Trained with CNN. Test Accuracy is 99.54%. (Later I will add details about the architecture) 
+	Trained with CNN. Activation function is rectified linear unit for all the layers except that the output layer had softmax. Test Accuracy is 99.54%. 
+	Architecture: Input->[Conv2d,layer_size=32,filter_size=(5,5)]->[MaxPool,factor of 2]->[Conv2d,layer_size=32,filter_size=(5,5)]->[MaxPool,factor of 2]->[Hidden layer of 256 units,dropout=0.5]->[output layer of size 10, dropout=0.5]
