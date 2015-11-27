@@ -1,4 +1,12 @@
 # This file contains the results that Touqir got so far.
 
 1)	Trained with 2 hidden layered MLP network each with 800 hidden units and with 50% dropout on each of those hidden layers on the MNIST dataset.
-	Ended up with a final test accuracy of 98.82%.
+	User 20% dropout in the input layer. Ended up with a final test accuracy of 98.82%.
+
+2)	Trained with 3 hidden layered MLP network each with 800 hidden units and with 50% dropout on each of those hidden layers on the MNIST dataset.
+	User 20% dropout in the input layer. Ended up with a final test accuracy of 98.72%. (Case of overfitting probably)
+
+3)	Trained with 2 hidden layered MLP network each with 800 hidden units and with 65% dropout on each of those hidden layers on the MNIST dataset.
+	User 20% dropout in the input layer. Ended up with a final test accuracy of 98.45%. (Case of overfitting probably)
+
+4)  Trained with CNN. Test Accuracy is 99.54%. (Later I will add details about the architecture) 
