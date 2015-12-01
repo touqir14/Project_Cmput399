@@ -89,7 +89,7 @@ end
 criterion = nn.MSECriterion()
 
 -- train using Stochastic Gradient Descent
-trainer = nn.StochasticGradient(mlp_auto, criterion)
+trainer = nn.StochasticGradient(mlp, criterion)
 trainer.learningRate = learningRate
 trainer.maxIterations = maxIterations
 
