@@ -50,19 +50,19 @@ model = nn.Sequential()
 
 -- Stage 1 : mean suppression -> filter bank -> squashing -> max pooling
 model:add(nn.SpatialSubtractiveNormalization(1, image.gaussian1D(15)))
-model:add(nn.SpatialConvolutionMM(1,32, 5,5))
+model:add(nn.SpatialConvolutionMM(1,16, 5,5))
 model:add(nn.Tanh())
 model:add(nn.SpatialMaxPooling(2,2,2,2))
 
 -- Stage 2 : mean suppression -> filter bank -> squashing -> max pooling
-model:add(nn.SpatialSubtractiveNormalization(32, image.gaussian1D(15)))
-model:add(nn.SpatialConvolutionMM(32,32, 5,5))
+model:add(nn.SpatialSubtractiveNormalization(16, image.gaussian1D(15)))
+model:add(nn.SpatialConvolutionMM(16,128, 5,5))
 model:add(nn.Tanh())
 model:add(nn.SpatialMaxPooling(2,2,2,2))
 
 -- Stage 3 : standard 2-layer neural network
-model:add(nn.Reshape(32*5*5))
-model:add(nn.Linear(32*5*5, 256))
+model:add(nn.Reshape(128*5*5))
+model:add(nn.Linear(128*5*5, 256))
 model:add(nn.Dropout(0.5))
 model:add(nn.Tanh())
 model:add(nn.Linear(256,#classes))
@@ -199,6 +199,11 @@ loadModel()
 criterion = nn.MSECriterion()
 
 function train(dataset)
+print('=-=-=-=-=-=-=-=-=')
+print('|Training model:|')
+print('=---------------=')
+print(model)
+print('=-=-=-=-=-=-=-=\n')
 for e = startEpoch,epochs do
 	epoch = e
 	local time = sys.clock()
