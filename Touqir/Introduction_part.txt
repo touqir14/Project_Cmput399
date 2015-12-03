@@ -1,0 +1,1 @@
+With the rise of data in todays digital era comes the high demand of data analysis with greater accuracies in prediction tasks. Unfortunately after a certain point, increasing the data samples doesn't necessarily contribute to higher prediction accuracy using conventional machine learning  
