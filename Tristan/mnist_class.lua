@@ -15,6 +15,8 @@ local opt = lapp[[
 	-t,--threads	(default 8)		number of threads
 	-s,--seed	(default 1)		random seed
 	-g,--gpu	use CUDA
+	-r,--reset	reset the training from scratch (don't load)
+	-p,--permute	Use random permutations of the training data
 ]]
 torch.manualSeed(opt.seed)
 torch.setnumthreads(opt.threads)
@@ -36,8 +38,8 @@ learningRate = 0.01		-- Amount to update by in stochastic gradient descent
 shuffleIndices = false  -- Randomize order of training data? [nil]
 
 -- Training info
-epochs = 20			-- Alternate between training and testing this many times
-batchSize = 100		-- Number of items in a training/testing batch
+epochs = 100		-- Alternate between training and testing this many times
+batchSize = 10		-- Number of items in a training/testing batch
 
 ntraining = 60000	-- Number of training inputs
 ntesting = 10000	-- Number of validation set inputs (unused in this sample)
@@ -48,32 +50,37 @@ model = nn.Sequential()
 --[[Add Layers]]--
 -- Ref: github.com/namin/torch-demos/
 
--- Stage 1 : mean suppression -> filter bank -> squashing -> max pooling
-model:add(nn.SpatialSubtractiveNormalization(1, image.gaussian1D(15)))
-model:add(nn.SpatialConvolutionMM(1,16, 5,5))
-model:add(nn.Tanh())
+--Remark: SpatialSutractiveNormalization doesn't work well with CUDA.
+-- 		  nor does SpatialConvolutionMap. Neither expose an update
+--		  function for CUDA.
+
+--model:add(nn.SpatialSubtractiveNormalization(1, image.gaussian1D(15)))
+model:add(nn.SpatialConvolutionMM(1,32, 5,5))
+model:add(nn.ReLU())
 model:add(nn.SpatialMaxPooling(2,2,2,2))
 
--- Stage 2 : mean suppression -> filter bank -> squashing -> max pooling
-model:add(nn.SpatialSubtractiveNormalization(16, image.gaussian1D(15)))
-model:add(nn.SpatialConvolutionMM(16,128, 5,5))
-model:add(nn.Tanh())
+--model:add(nn.SpatialSubtractiveNormalization(32, image.gaussian1D(15)))
+model:add(nn.SpatialConvolutionMM(32,128, 5,5))
+model:add(nn.ReLU())
 model:add(nn.SpatialMaxPooling(2,2,2,2))
 
--- Stage 3 : standard 2-layer neural network
 model:add(nn.Reshape(128*5*5))
+model:add(nn.Dropout())
 model:add(nn.Linear(128*5*5, 256))
-model:add(nn.Dropout(0.5))
 model:add(nn.Tanh())
-model:add(nn.Linear(256,#classes))
-model:add(nn.Dropout(0.5))
+model:add(nn.Dropout())
+model:add(nn.Linear(256, 256))
+model:add(nn.Tanh())
+model:add(nn.Dropout())
+model:add(nn.Linear(256, #classes))
+model:add(nn.SoftMax())
 
 --[[*** End of Configuration ***]]--
 
 if use_cuda then
 	require 'cutorch'
 	-- Put our model onto the GPU
-	model:cuda()
+	model = model:cuda()
 	-- Add layers to automatically convert results
 	model_auto = nn.Sequential()
 	-- Copies input float tensors and sends them to CUDA
@@ -98,8 +105,8 @@ end
 train_file = 'mnist.t7/train_32x32.t7'
 test_file = 'mnist.t7/test_32x32.t7'
 
-trainData = torch.load(train_file, 'ascii')
-testData = torch.load(test_file, 'ascii')
+train_data = torch.load(train_file, 'ascii')
+test_data = torch.load(test_file, 'ascii')
 
 --[[Workers]]--
 
@@ -109,12 +116,20 @@ criterion = nn.MSECriterion()
 function runValidation(dataset)
 	local totalError = 0
 	local batchNum = 1
+	local accuracy = 0
+	local confusion = torch.Tensor(#classes, #classes)
+	confusion[{}] = 0
+
+	-- Generate a random perm of the training data
+	if opt.permute then dataset = setupDataset(test_data, ntraining) end
+
 	print('Validation Epoch ' .. epoch)
 	for t = 1,ntesting,batchSize do
 		bsize = math.min(t+batchSize, dataset:size()) - t
 		-- Need to hold targets and outputs for back prop
 		local inputs = torch.Tensor(bsize, 1, geometry[1],geometry[2])
 		local targets = torch.Tensor(bsize, #classes)
+		local labels = torch.Tensor(bsize)
 		-- For each element in the batch do
 		local k = 1
 		for i = t,t+bsize-1 do
@@ -123,13 +138,31 @@ function runValidation(dataset)
 			local output = dataset[i][2]
 			inputs[k] = input
 			targets[k] = output
+			_,labels[k] = torch.max(output,1)
 			k = k + 1
 		end
 
 		-- Get the error in the prediction
+		model:evaluate()
 		local outputs = model:forward(inputs)
+		local predictions
+		_,predictions = torch.max(outputs,2)
+
+		predictions = predictions:int()
+		labels = labels:int()
+
 		local batchError = criterion:forward(targets, outputs)
 		totalError = totalError + (batchError - totalError)/batchNum
+
+		-- Determine the actual accuracy of the model
+		matches = predictions:eq(labels)
+		accuracy = accuracy + torch.sum(matches)
+		-- Count where misclassification happens
+		for a = 1,predictions:numel() do
+			i = labels[a]
+			j = predictions[a][1]
+			confusion[i][j] = confusion[i][j]+1
+		end
 
 		-- Output the error amount
 		print('| validation batch %d.%d'%{epoch,batchNum}
@@ -137,7 +170,11 @@ function runValidation(dataset)
 		batchNum = batchNum + 1
 	end
 	print('Validation error = %.4f%%' % (totalError*100))
-	epoch = epoch + 1
+	print('Accuracy = %.4f%%' % (accuracy/ntesting*100))
+	print('\nConfusion Matrix:')
+	print('     ', table.concat(classes, '     '))
+	print(string.rep('-',70))
+	print(confusion)
 end
 
 function saveModel()
@@ -152,7 +189,7 @@ function saveModel()
 end
 
 function loadModel()
-	if paths.dirp('data/model.dat') then
+	if not opt.reset and paths.filep('data/model.dat') then
 		model = torch.load('data/model.dat')
 		info = torch.load('data/info.dat')
 
@@ -160,6 +197,7 @@ function loadModel()
 		print('Loaded model from file')
 	else
 		startEpoch = 1
+		print('Starting new training set')
 	end
 end
 
@@ -176,7 +214,9 @@ end
 function setupDataset(inputData, n)
 	dataset = {}
 	function dataset:size() return n; end
-	for i = 1,n do
+	perm = torch.randperm((#inputData['data'])[1])
+	for j = 1,n do
+		i = perm[j]
 		-- input is an image
 		input = inputData['data'][i]:double()
 
@@ -184,15 +224,14 @@ function setupDataset(inputData, n)
 		output = torch.Tensor(#classes)
 		output[{}] = 0
 		output[inputData['labels'][i]] = 1
-
-		dataset[i] = {input, output}
+		dataset[j] = {input, output}
 	end
 	return dataset
 end
 
 --[[Setup Dataset]]--
-trainData = setupDataset(trainData, ntraining)
-testData = setupDataset(testData, ntesting)
+trainData = setupDataset(train_data, ntraining)
+testData = setupDataset(test_data, ntesting)
 
 --[[Training Section]]--
 loadModel()
@@ -204,11 +243,15 @@ print('|Training model:|')
 print('=---------------=')
 print(model)
 print('=-=-=-=-=-=-=-=\n')
+local totalTime = sys.clock()
 for e = startEpoch,epochs do
 	epoch = e
 	local time = sys.clock()
 	local totalError = 0
 	local batchNum = 1	
+
+	-- Generate a random perm of the training data
+	if opt.permute then dataset = setupDataset(train_data, ntraining) end
 
 	print('Training Epoch '..e)
 	-- For each batch do
@@ -230,6 +273,7 @@ for e = startEpoch,epochs do
 		collectgarbage()
 		
 		-- Compute the forward error
+		model:training()
 		local outputs = model:forward(inputs)
 
 		-- Zero the gradient accumulator
@@ -255,6 +299,7 @@ for e = startEpoch,epochs do
 	elapsedTime = sys.clock() - time
 	print('=== End of Epoch '..e..' --- %2.2f' % elapsedTime..' s ===\n\n')
 end
+print("\nTotal Time: %.2f" % (sys.clock() - totalTime))
 end
 
 collectgarbage()

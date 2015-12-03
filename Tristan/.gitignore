@@ -2,3 +2,5 @@ mnist.t7.tgz
 mnist.t7
 demos
 data
+*.dat
+*.swp

@@ -1,0 +1,74 @@
+1) Accuracy: 96.9% after 13 epochs
+Structure:
+    [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> (13) -> (14) -> (15) -> output]
+    (1): nn.SpatialBatchNormalization
+    (2): nn.SpatialConvolutionMM(1 -> 32, 5x5)
+    (3): nn.ReLU
+    (4): nn.SpatialMaxPooling(2,2,2,2)
+    (5): nn.Dropout(0.500000)
+    (6): nn.SpatialBatchNormalization
+    (7): nn.SpatialConvolutionMM(32 -> 128, 5x5)
+    (8): nn.ReLU
+    (9): nn.SpatialMaxPooling(2,2,2,2)
+    (10): nn.Reshape(3200)
+    (11): nn.Dropout(0.500000)
+    (12): nn.Linear(3200 -> 512)
+    (13): nn.Tanh
+    (14): nn.Dropout(0.500000)
+    (15): nn.Linear(512 -> 10)
+
+2) Accuracy: 99.38% after 100 epochs
+
+    [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> (13) -> (14) -> (15) -> output]
+    (1): nn.SpatialBatchNormalization
+    (2): nn.SpatialConvolutionMM(1 -> 32, 5x5)
+    (3): nn.ReLU
+    (4): nn.SpatialMaxPooling(2,2,2,2)
+    (5): nn.Dropout(0.500000)
+    (6): nn.SpatialBatchNormalization
+    (7): nn.SpatialConvolutionMM(32 -> 128, 5x5)
+    (8): nn.ReLU
+    (9): nn.SpatialMaxPooling(2,2,2,2)
+    (10): nn.Reshape(3200)
+    (11): nn.Dropout(0.500000)
+    (12): nn.Linear(3200 -> 512)
+    (13): nn.Tanh
+    (14): nn.Dropout(0.500000)
+    (15): nn.Linear(512 -> 10)
+
+3) Accuracy: 99.46% after 100 epochs (saturation around 60+ epochs)
+    [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> (13) -> output]
+    (1): nn.SpatialConvolutionMM(1 -> 32, 5x5)
+    (2): nn.ReLU
+    (3): nn.SpatialMaxPooling(2,2,2,2)
+    (4): nn.SpatialConvolutionMM(32 -> 128, 5x5)
+    (5): nn.ReLU
+    (6): nn.SpatialMaxPooling(2,2,2,2)
+    (7): nn.Reshape(3200)
+    (8): nn.Dropout(0.500000)
+    (9): nn.Linear(3200 -> 256)
+    (10): nn.Tanh
+    (11): nn.Dropout(0.500000)
+    (12): nn.Linear(256 -> 10)
+    (13): nn.SoftMax
+
+4) Accuracy: 99.45% after 100 epochs (saturation around 50+ epochs)
+
+    [input -> (1) -> (2) -> (3) -> (4) -> (5) -> (6) -> (7) -> (8) -> (9) -> (10) -> (11) -> (12) -> (13) -> (14) -> (15) -> (16) -> output]
+    (1): nn.SpatialConvolutionMM(1 -> 32, 5x5)
+    (2): nn.ReLU
+    (3): nn.SpatialMaxPooling(2,2,2,2)
+    (4): nn.SpatialConvolutionMM(32 -> 128, 5x5)
+    (5): nn.ReLU
+    (6): nn.SpatialMaxPooling(2,2,2,2)
+    (7): nn.Reshape(3200)
+    (8): nn.Dropout(0.500000)
+    (9): nn.Linear(3200 -> 256)
+    (10): nn.Tanh
+    (11): nn.Dropout(0.500000)
+    (12): nn.Linear(256 -> 256)
+    (13): nn.Tanh
+    (14): nn.Dropout(0.500000)
+    (15): nn.Linear(256 -> 10)
+    (16): nn.SoftMax
+

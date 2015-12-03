@@ -1,0 +1,3 @@
+TODO:
+
+1) Increase the dropout of the hidden layer of CNN to 0.6 and see what happens.
