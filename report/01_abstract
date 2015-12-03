@@ -1,0 +1,1 @@
+We compare a multilayer perceptron (MLP) to a convolutional neural network (CNN) trained on the MNIST data. We also test various parameter settings, such as dropout, network size, to show their effects on the overall accuracy of CNNs in our model, and discuss reasons for these differences.
