@@ -2,4 +2,6 @@ References:
 
 1) Rosenblatt, Frank. Principles of Neurodynamics: Perceptrons and the Theory of Brain Mechanisms, 1961
 2) Rumelhart, David E., Geoffrey E. Hinton, and R. J. Williams. Learning Internal Representations by Error Propagation, 1986
-3) 
+3) Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. Gradient-based learning applied to document recognition. Proceedings of the IEEE, november 1998
+4) Yann LeCun, Corinna Cortes. THE MNIST DATABASE. http://yann.lecun.com/exdb/mnist/
+5) Hinton, Geoffrey; Salakhutdinov, Ruslan. Reducing the Dimensionality of Data with Neural Networks, 2006
