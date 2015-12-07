@@ -1,0 +1,10 @@
+References:
+
+1) Rosenblatt, Frank. Principles of Neurodynamics: Perceptrons and the Theory of Brain Mechanisms, 1961
+2) Rumelhart, David E., Geoffrey E. Hinton, and R. J. Williams. Learning Internal Representations by Error Propagation, 1986
+3) Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. Gradient-based learning applied to document recognition. Proceedings of the IEEE, november 1998
+4) Yann LeCun, Corinna Cortes. The MNIST database of handwritten digits. http://yann.lecun.com/exdb/mnist/
+5) Geoffrey Hinton, Ruslan Salakhutdinov. Reducing the Dimensionality of Data with Neural Networks, 2006
+6) Touqir Sajed. Unsupervised learning and Deep learning, 2014. https://drive.google.com/file/d/0B1KKO4MVEtqDSTFTMTkzRk5HY1k/view
+7) Yoshua Bengio. Learning Deep Architectures for AI, 2009. http://www.iro.umontreal.ca/~bengioy/papers/ftml.pdf
+8) Wan Li, Matthew Zeiler, Sixin Zhang, Yann LeCun, Rob Fergus. Regularization of Neural Network using DropConnect, 2013
