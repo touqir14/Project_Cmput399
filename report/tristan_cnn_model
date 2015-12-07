@@ -1,0 +1,28 @@
+Convolutional Neural Networks
+
+Convolutional Neural Networks (CNNs) are a type of specialized neural network targeted at image processing problems. The major problem with conventional neural networks is that, while raw pixels contain a great deal of information, it takes a great deal of work to extract useful features from raw pixel information. CNNs leverage image processing techniques to reduce that work by applying filters through convolutions to more generalize the information in the image. This significantly reduces the amount of training that is required and improves overall accuracy.
+
+Each convolutional layer is required to learn a set of weights that will applied to every input to the layer. These weights are applied in a spatial way and allow the network to recognize patterns in a similar way that a sliding window classifier works.
+
+A typical architecture resembles an MLP with a convolution component at the front of it. However, a major difference is that convolutional networks don't typically contain a strictly linear layer in the same sense as MLPs do, but instead exploit the fact that a convolution with a wide enough kernel is equivalent to a fully connected layer. Because of this, a convolutional neural network is a generalization of an MLP, rather than a special case made for image processing. This makes it suitable for both the spatial problems they were designed to target as well as general problems that MLPs were originally designed for.
+
+Architecture
+
+Our architecture consists of 2 convolution layers, followed by a two, fully-connected hidden layers. We separated the convolution layers using a ReLU. The output layer was filtered using a SoftMax function. Specifically, we trained a CNNs with the following architecture:
+
+    Input
+    Convolution (32 filters, 5x5)
+    ReLU
+    Max Pooling (factor of 2)
+    Convolution (128 filters, 5x5)
+    ReLU
+    Max Pooling (factor of 2)
+    Fully Connected Layer (256 units, 50% dropout)
+    Tanh Layer
+    Fully Connected Layer (256 units, 50% dropout)
+    Tanh Layer
+    Sigmoid Layer (10 units, 50% dropout)
+
+We trained and tested the model using the same techniques as the MLP models. After 100 epochs, the final accuracy was 99.43%±0.02% with 95% confidence over the last 10 epochs.
+
+Discussion
