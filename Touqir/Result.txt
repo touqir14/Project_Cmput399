@@ -18,3 +18,12 @@
 
 5) Touqir: 
 	Same architecture as in the case of my 4th experiment. Only thing I changed was setting dropout of the hidden layer to 0.4 rather than 0.5. Test Accuracy is 99.51%. It isnt clear whether setting the dropout to 0.4 produced any noticable dimished performance of the architecture because a difference of 0.03% could also be a random noise due to different weight initializations and also because of stochastic gradient descent(randomly sampled batches).
+
+6) Touqir: 
+	Same architecture as in the case of my 4th experiment. Only thing I changed was setting dropout of the hidden layer to 0.65. Test Accuracy is 99.47%. It isnt clear whether setting the dropout to 0.4 produced any noticable dimished performance of the architecture because a difference of 0.03% could also be a random noise due to different weight initializations and also because of stochastic gradient descent(randomly sampled batches).
+
+7) Touqir: 
+	Same architecture as in the case of my 4th experiment. Only thing I changed was setting dropout of the hidden layer to 0.30. Test Accuracy is 99.54%. It isnt clear whether setting the dropout to 0.4 produced any noticable dimished performance of the architecture because a difference of 0.03% could also be a random noise due to different weight initializations and also because of stochastic gradient descent(randomly sampled batches).
+
+
+All were trained for 300 epochs
