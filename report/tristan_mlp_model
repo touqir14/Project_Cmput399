@@ -1,0 +1,32 @@
+Multilayer Perceptrons (MLP) are a type of deep neural network for solving general, non-linearly separable problems. They typically consist of two or more layers of nonlinear activation function joined by a set of linear weights on their outputs.
+
+A perceptron is a binary classifier consisting of 2 layers: an input layer, which is joined to the output layer by a set of weights. These weights are then summed up. If the sum is greater than some threshold, $t$, then the input is placed into one classification set; otherwise, it is placed in the other classification.
+
+As demonstrated by the famous XOR example in Minsky and Papert's book, Perceptrons (1969), a perceptron can't solve non-linearly separable functions. To rectify this issue, more layers can be added, each separated by a nonlinear activation function such as a sigmoid. Without these nonlinear activation functions, the system becomes equivalent to a series of matrix multiplications of the weights and, due to associativity, collapses into a single matrix.
+
+The input to each layer is thus its own perceptron that learns to classify some non-linear function into a set of binary outputs.
+
+## Architecture
+
+To tackle this problem, we trained and tested multiple MLPs with varying parameters. The first classifier is a two hidden-layer MLP network. Each layer contained 800 hidden units separating them. The final output was selected using a SoftMax layer to clamp the output classes to their approximate probabilities. The architecture is as follows:
+
+    Input
+    Hidden Layer (800 units, 50% dropout)
+    ReLU
+    Hidden Layer (800 units, 50% dropout)
+    ReLU
+    Output (50% dropout)
+    SoftMax Loss
+
+## Results
+The network was trained on all 60000 training images in the MNIST dataset. Data was selected and trained on in batches of **B** over **N** epochs. Dropout was enabled during training and disabled during testing to maximize accuracy.
+
+To check the accuracy of the model, all 10000 testing images were used. We report a classification accuracy of 98.82% on these test images after all training was completed.
+
+## Discussion
+
+The choice of the ReLU function prevents the output of the previous layer from being completely destroyed. Rather than classifying a set of approximately binary inputs, the inputs are now positive and proportional to the level of activation in the previous layer. This should, in turn, reduce the amount of interpretation that following layers will need to perform, while still giving strong clues about which values are not valid.
+
+For a mutually exclusive classification problem like digit classification, the final layer is usually applied to a softmax so that outputs are either in a high state or a low state and are effectively normalized as probabilities of selecting the vector. For a more general classification problem in which multiple outputs can be high, a different function, such as the logistic function can be used. The purpose of this is to clamp the outputs to a binary state.
+
+To improve results and reduce overfitting, an input dropout is employed. Dropping neurons randomly makes it so they are unable to expect which other neurons will fire simultaneously, and so discourages them from offsetting each others' output. This encourages specialization of each node. The choice of a sigmoid (in our case SoftMax) allows multiple specialized neurons to fire simultaneously safely, since excessively high output values are clamped to a higher output. When the network is not training, dropout is turned off, forcing all specialized nodes to fire when they are expected to.

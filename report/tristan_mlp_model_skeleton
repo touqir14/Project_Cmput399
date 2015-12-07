@@ -1,0 +1,27 @@
+4.1 Architecture
+	To tackle this problem, we trained and tested multiple MLPs with varying parameters. The first classifier is a two hidden-layer MLP network. Each layer contained 800 hidden ReLU units separating them. The final output was selected using a SoftMax layer to clamp the output classes.
+
+	* Two-hidden layer MLP network
+	Input(28x28) -> -[50% dropout]-> Linear(28x28,800) -> ReLU -[50% dropout]-> Linear(800,800) -> ReLU -> Linear(800,10) -> Softmax
+	* 28x28 -> 800 [ReLU] -> 800 [ReLU] -> 10 [SoftMax]
+
+	2-Layer, 50% dropout, 800 units
+
+4.2 Training
+	* How did we train?
+	* Preprocessing?
+	* Batch size
+	* Dropout
+	* Pseudocode
+
+4.3 Testing
+	* How did we test?
+	Dropout was disabled for testing.
+	* Pseudocode
+
+4.4 Results
+	* Final accuracy of 98.82%.
+	*
+
+4.5 Discussion
+	* Why didn't the number of units
